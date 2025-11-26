@@ -5,7 +5,7 @@
     "sql_data_conversion": "\\[SQL0802] Fehler bei Datenumsetzung",
     "sql_multiple_rows": "\\[SQL0811] Ergebnis der Anweisung enthält mehr als eine Zeile",
     "sql_syntax_error": "AS400JDBCSQLSyntaxErrorException: \\[SQL0104] Token",
-    "sql_nontransient_conn": "java\\.sql\\.SQLNonTransientConnectionException",
+    "sql_nontransient_connection": "java\\.sql\\.SQLNonTransientConnectionException",
     "sql_generic": "java\\.sql\\.SQLException",
     "as400_jdbc": "com\\.ibm\\.as400\\.access\\.[A-Za-z0-9]+Exception",
     "as400_generic": "com\\.ibm\\.as400\\.access\\.",

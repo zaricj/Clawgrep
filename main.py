@@ -77,35 +77,35 @@ def print_summary(counter: Counter):
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
+    
     # Load patterns.json
     patterns = load_patterns_json(Path("patterns/patterns.json"))
-
+    print(patterns)
+    
     # Compile patterns
     entry_pattern = compile_regex(patterns["entry_header_pattern"], re.DOTALL)
     sql_pattern = compile_regex(patterns["sql_statement_pattern"], re.DOTALL)
     param_pattern = compile_regex(patterns["param_pattern"])
     caused_pattern = compile_regex(patterns["caused_by_pattern"], re.MULTILINE)
     ignore_pattern = compile_regex(patterns["ignore_stacktrace_pattern"], re.MULTILINE)
-
+    
     # Compile exception sub-dict
     exception_patterns = compile_regex_dict(patterns["exception_patterns"])
-
+    
     # Find logs
     log_dir = Path("logs")
     log_files = list(log_dir.glob("*.log"))
-
+    
     if not log_files:
         print("No log files found in /logs")
         raise SystemExit
-
     print(f"Found {len(log_files)} log files.\n")
-
+    
     all_records = []
     global_counter = Counter()
-
+    
     for log_file in log_files:
         print(f"Processing: {log_file.name}")
-
         records, counter = analyze_log(
             log_file,
             entry_pattern,
@@ -115,19 +115,21 @@ if __name__ == "__main__":
             ignore_pattern,
             exception_patterns
         )
-
+        
         all_records.extend(records)
         global_counter.update(counter)
-
+        
     # CSV filename
     timestamp = datetime.now().strftime("%Y-%m-%d")
     
     output_dir = Path("CSVOutput")
     output_dir.mkdir(exist_ok=True)
     output_csv = output_dir / f"combined_report_{timestamp}.csv"
-
-    write_combined_csv(all_records, output_csv)
+    
+    headers = ["Time", "Source", "Error Details", "Exception Type", "Parameters", "Caused By"]
+    
+    write_combined_csv(all_records, headers, output_csv)
     convert_csv_to_excel(output_csv, output_csv.with_suffix('.xlsx'))
     print_summary(global_counter)
-
+    
     print(f"\nDone. Parsed {len(log_files)} log files with {len(all_records)} total entries.")

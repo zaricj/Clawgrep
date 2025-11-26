@@ -1,6 +1,7 @@
 from pathlib import Path
 import csv
 import xlsxwriter
+from typing import List
 
 def validate_inputs(file: Path) -> bool:
     try:
@@ -17,10 +18,10 @@ def validate_inputs(file: Path) -> bool:
         return False
 
 # ---------- CSV Output ----------
-def write_combined_csv(all_records, output_csv_file: Path):
+def write_combined_csv(all_records, headers: List[str], output_csv_file: Path):
     with open(output_csv_file,"w", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile, delimiter=";", quotechar='"', quoting=csv.QUOTE_ALL)
-        writer.writerow(["Time", "Source", "SQL Statement", "Exception Type", "Parameters", "Caused By"])
+        writer.writerow(headers)
         for row in all_records:
             writer.writerow(row)
 
