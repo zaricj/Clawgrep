@@ -1,0 +1,92 @@
+import sys
+import os
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QTreeView, QPushButton, QLineEdit
+)
+from PySide6.QtWidgets import QFileSystemModel
+from PySide6.QtCore import QDir, QModelIndex, QStandardPaths
+
+from typing import TYPE_CHECKING
+
+from pathlib import Path
+
+if TYPE_CHECKING:
+    from app import MainWindow
+
+class DirectoryViewer():
+    def __init__(self, main_window: "MainWindow", start_path=None):
+        self.main_window = main_window
+        self.ui = main_window.ui
+        
+        # 1. Setup the Model
+        self.model = QFileSystemModel()
+        
+        # Set the root path for the model
+        if start_path is None:
+            # Default to the user's home directory if no path is provided
+            # You can specify a starting path, e.g., 'C:/' on Windows or '/home/user/' on Linux
+            # QStandardPaths.writableLocation(QStandardPaths.StandardLocation.HomeLocation)
+            start_path = QDir.currentPath()
+        else:
+            start_path = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.HomeLocation)
+
+        # Set the root path on the model
+        self.model.setRootPath(start_path)
+
+        # 2. Setup the View
+        self.ui.treeView
+        self.ui.treeView.setModel(self.model)
+        
+        # Set the view's root index to display the contents of the starting path
+        # If you want to show the full drive structure, setRootPath is enough, 
+        # but to limit the view to a specific folder's contents, set setRootIndex.
+        root_index = self.model.index(start_path)
+        self.ui.treeView.setRootIndex(root_index)
+
+        # Optional: Configure the view appearance
+        self.ui.treeView.setSortingEnabled(True)
+        self.ui.treeView.setHeaderHidden(False)
+        
+        # Optionally hide columns you don't need (e.g., size, type, date)
+        # 0: Name, 1: Size, 2: Type, 3: Date Modified
+        self.ui.treeView.setColumnHidden(1, False) # Show Size
+        self.ui.treeView.setColumnHidden(2, True) # Hide Type
+        self.ui.treeView.setColumnHidden(3, True) # Hide Date Modified
+        
+        # Connect the selection signal to a handler
+        self.ui.treeView.clicked.connect(self.on_item_clicked)
+        
+    def on_item_clicked(self, index: QModelIndex):
+        """
+        Handles an item being clicked in the QTreeView.
+        """
+        # Get the absolute file path from the model for the given index
+        file_path: str = self.model.filePath(index)
+        # Init the line edit where to set the path
+        line_edit: QLineEdit = self.ui.lineEdit
+        check: str = self.check_if_file_or_folder(file_path)
+    
+        if check == "file": # Only print if file for now
+            # Set file path in the line edit underneath it
+            self.set_item_path_in_line_edit(line_edit, file_path)
+        
+        print(f"Selected Path: {file_path}")
+        
+    def set_item_path_in_line_edit(self, line_edit: QLineEdit, text_to_display: str = None):
+        """
+        Sets the selected item's path into the provided QLineEdit.
+        """
+        line_edit.setText(text_to_display)
+        
+    def check_if_file_or_folder(self, path: str) -> str:
+        """
+        Checks if the given path is a file or folder.
+        Returns "file", "folder", or "not found".
+        """
+        p = Path(path)
+        if p.is_file():
+            return "file"
+        elif p.is_dir():
+            return "folder"
+        else:
+            return "not found"
