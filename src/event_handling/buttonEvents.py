@@ -190,8 +190,7 @@ class ButtonEventHandler:
                     exporter.export_to_excel(df, save_as)
                     self.main_window.thread_pool.start(exporter)
             else:
-                QMessageBox.warning(self.main_window, "Export",
-                                    "Please select CSV or Excel.")
+                QMessageBox.warning(self.main_window, "Export", "Please select CSV or Excel.")
 
         except Exception as ex:
             QMessageBox.critical(

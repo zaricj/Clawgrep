@@ -22,6 +22,13 @@ class ExportManager(QRunnable):
 
     @Slot(pd.DataFrame, str, str)
     def export_to_csv(self, data: pd.DataFrame, save_as_path: str, delimiter: str = ';'):
+        """Export the table data to CSV. The table data is a Pandas Dataframe.
+
+        Args:
+            data (pd.DataFrame): The table data as a Pandas Dataframe.
+            filepath (str): Full filepath to where the CSV file will be saved to.
+            delimiter (str, optional): CSV delimiter. Defaults to ';'.
+        """
         # Enhanced CSV export with proper encoding
         # Convert pandas DataFrame to CSV
         self.signals.statusbar_message.emit("Exporting table data to CSV...", 5000)
@@ -30,6 +37,12 @@ class ExportManager(QRunnable):
 
     @Slot(pd.DataFrame, str)
     def export_to_excel(self, data: pd.DataFrame, save_as_path: str):
+        """Export the table data to Excel. The table data is a Pandas Dataframe.
+
+        Args:
+            data (pd.DataFrame): The table data as a Pandas Dataframe
+            filepath (str): Full filepath to where the Excel file will be saved to.
+        """
         # Excel export with formatting
         self.signals.statusbar_message.emit("Exporting table data to Excel...", 5000)
         sheet_name = "Result"
