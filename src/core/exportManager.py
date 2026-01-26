@@ -1,7 +1,7 @@
 """This file contains business logic for exporting the final results to a csv file which would be used for the table result display and also an conversion to an excel file."""
 from PySide6.QtCore import QObject, QRunnable, Signal, Slot
-from PySide6.QtGui import QPixmap
 import pandas as pd
+from app import MainWindow
 
 
 class ExportManagerSignals(QObject):
@@ -14,10 +14,10 @@ class ExportManagerSignals(QObject):
 class ExportManager(QRunnable):
     """Handles CSV and Excel export"""
 
-    def __init__(self, app_icon_path: str):
+    def __init__(self, main_window: 'MainWindow'):
         super().__init__()
         self.signals = ExportManagerSignals()
-        self.app_icon_path = app_icon_path
+        self.app_icon_path = main_window.app_icon
         self.setAutoDelete(True)
 
     @Slot(pd.DataFrame, str, str)

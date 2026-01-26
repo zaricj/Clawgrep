@@ -8,7 +8,6 @@ from pathlib import Path
 from gui.models.tableViewModel import ResultsTableWidget
 from core.exportManager import ExportManager
 from core.fileParser import FileParserWorker
-from utils.signalConnector import SignalConnector
 
 
 if TYPE_CHECKING:
@@ -99,17 +98,16 @@ class ButtonEventHandler:
     @Slot()
     def on_parse_files(self) -> None:
         log_file = [Path(r"C:\Users\Jovan\Downloads\sample.log")]
-        
+
         file_parser = FileParserWorker(self.main_window, log_file, None)
-        signal_connector = SignalConnector(self.main_window)
-        signal_connector.connect_file_parser_worker(file_parser)
+        self.main_window.signal_connector.connect_file_parser_worker(
+            file_parser)
         self.main_window.thread_pool.start(file_parser)
-        
-        
 
     # === Table Widget Events ===
 
     # Populate the Table Widget
+
     @Slot(pd.DataFrame)
     def populate_results_table(self, data: pd.DataFrame) -> None:
         """Display the DataFrame efficiently in a QTableView."""
@@ -170,9 +168,9 @@ class ButtonEventHandler:
                 if not save_as:
                     return  # User cancelled the save dialog
                 else:
-                    exporter = ExportManager(self.app_icon_path)
-                    signal_connector = SignalConnector(self.main_window)
-                    signal_connector.connect_export_manager_signals(exporter)
+                    exporter = ExportManager(self.main_window)
+                    self.main_window.signal_connector.connect_export_manager_signals(
+                        exporter)
                     exporter.export_to_csv(df, save_as, ",")
                     self.main_window.thread_pool.start(exporter)
 
@@ -184,13 +182,14 @@ class ButtonEventHandler:
                 if not save_as:
                     return  # User cancelled the save dialog
                 else:
-                    exporter = ExportManager(self.app_icon_path)
-                    signal_connector = SignalConnector(self.main_window)
-                    signal_connector.connect_export_manager_signals(exporter)
+                    exporter = ExportManager(self.main_window)
+                    self.main_window.signal_connector.connect_export_manager_signals(
+                        exporter)
                     exporter.export_to_excel(df, save_as)
                     self.main_window.thread_pool.start(exporter)
             else:
-                QMessageBox.warning(self.main_window, "Export", "Please select CSV or Excel.")
+                QMessageBox.warning(self.main_window, "Export",
+                                    "Please select CSV or Excel.")
 
         except Exception as ex:
             QMessageBox.critical(

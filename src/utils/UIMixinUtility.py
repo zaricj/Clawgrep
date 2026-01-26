@@ -12,9 +12,6 @@ FILE_DIR = Path(__file__).resolve()
 ROOT_DIR = FILE_DIR.parents[1]  # src Folder
 GUI_PATTERN_DIRECTORY: Path = ROOT_DIR / "patterns"
 GUI_PATTERN_FILE_PATH: Path = GUI_PATTERN_DIRECTORY / "patterns.json"
-GUI_PATTERN_DIRECTORY,
-GUI_PATTERN_FILE_PATH
-
 
 class Mixin:
     """
@@ -67,22 +64,3 @@ class Mixin:
         self.dir_viewer = DirectoryViewer(self)
         self.table_results = ResultsTableWidget(self)
 
-    @Slot(str, int)
-    def handle_statusbar_show_message(self, message: str, duration: int) -> None:
-        """ Handler for QStatusbar showMessage signals.
-
-        Args:
-            message (str): The message to be shown in the statusbar.
-            duration (int): The duration of the message in milliseconds.
-        """
-        self.ui.statusbar.showMessage(message, duration)
-
-    @Slot(str)
-    def handle_text_edit_append(self, message: str) -> None:
-        """Handler for QTextEdit append signals.
-
-        Args:
-            message (str): The message to display in the QTextEdit.
-        """
-
-        self.ui.text_edit_program_output.append(message)
