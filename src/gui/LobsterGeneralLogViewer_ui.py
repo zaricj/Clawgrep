@@ -106,45 +106,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setSpacing(6)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(9, 0, 9, 3)
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.label_pattern_configuration = QLabel(self.widget_configuration)
-        self.label_pattern_configuration.setObjectName(u"label_pattern_configuration")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_pattern_configuration.sizePolicy().hasHeightForWidth())
-        self.label_pattern_configuration.setSizePolicy(sizePolicy)
-
-        self.horizontalLayout_2.addWidget(self.label_pattern_configuration)
-
-        self.combobox_configuration = QComboBox(self.widget_configuration)
-        self.combobox_configuration.setObjectName(u"combobox_configuration")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.combobox_configuration.sizePolicy().hasHeightForWidth())
-        self.combobox_configuration.setSizePolicy(sizePolicy1)
-
-        self.horizontalLayout_2.addWidget(self.combobox_configuration)
-
-        self.button_refresh_configuration = QPushButton(self.widget_configuration)
-        self.button_refresh_configuration.setObjectName(u"button_refresh_configuration")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
-        self.button_refresh_configuration.setIcon(icon5)
-
-        self.horizontalLayout_2.addWidget(self.button_refresh_configuration)
-
-        self.button_pattern_configuration_info = QPushButton(self.widget_configuration)
-        self.button_pattern_configuration_info.setObjectName(u"button_pattern_configuration_info")
-        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.HelpAbout))
-        self.button_pattern_configuration_info.setIcon(icon6)
-
-        self.horizontalLayout_2.addWidget(self.button_pattern_configuration_info)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
-
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.label_files_directory = QLabel(self.widget_configuration)
@@ -174,11 +135,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_04.setObjectName(u"horizontalLayout_04")
         self.label_file_pattern = QLabel(self.widget_configuration)
         self.label_file_pattern.setObjectName(u"label_file_pattern")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.label_file_pattern.sizePolicy().hasHeightForWidth())
-        self.label_file_pattern.setSizePolicy(sizePolicy2)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_file_pattern.sizePolicy().hasHeightForWidth())
+        self.label_file_pattern.setSizePolicy(sizePolicy)
         self.label_file_pattern.setMinimumSize(QSize(0, 0))
 
         self.horizontalLayout_04.addWidget(self.label_file_pattern)
@@ -192,6 +153,45 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_04)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.label_pattern_configuration = QLabel(self.widget_configuration)
+        self.label_pattern_configuration.setObjectName(u"label_pattern_configuration")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_pattern_configuration.sizePolicy().hasHeightForWidth())
+        self.label_pattern_configuration.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_2.addWidget(self.label_pattern_configuration)
+
+        self.combobox_configuration = QComboBox(self.widget_configuration)
+        self.combobox_configuration.setObjectName(u"combobox_configuration")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.combobox_configuration.sizePolicy().hasHeightForWidth())
+        self.combobox_configuration.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_2.addWidget(self.combobox_configuration)
+
+        self.button_refresh_configuration = QPushButton(self.widget_configuration)
+        self.button_refresh_configuration.setObjectName(u"button_refresh_configuration")
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
+        self.button_refresh_configuration.setIcon(icon5)
+
+        self.horizontalLayout_2.addWidget(self.button_refresh_configuration)
+
+        self.button_pattern_configuration_info = QPushButton(self.widget_configuration)
+        self.button_pattern_configuration_info.setObjectName(u"button_pattern_configuration_info")
+        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.HelpAbout))
+        self.button_pattern_configuration_info.setIcon(icon6)
+
+        self.horizontalLayout_2.addWidget(self.button_pattern_configuration_info)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
 
         self.button_parse_files = QPushButton(self.widget_configuration)
         self.button_parse_files.setObjectName(u"button_parse_files")
@@ -416,6 +416,14 @@ class Ui_MainWindow(object):
         self.actionInput_Directory1.setText(QCoreApplication.translate("MainWindow", u"Input Directory", None))
         self.actionOutput_Directory.setText(QCoreApplication.translate("MainWindow", u"Output Directory", None))
         self.verticalGroupBox_information.setTitle(QCoreApplication.translate("MainWindow", u"Information", None))
+        self.label_files_directory.setText(QCoreApplication.translate("MainWindow", u"Files Directory:", None))
+        self.input_browse_folder.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Select a folder containing text based files to search...", None))
+#if QT_CONFIG(tooltip)
+        self.button_browse_folder.setToolTip(QCoreApplication.translate("MainWindow", u"Browse folder directory.", None))
+#endif // QT_CONFIG(tooltip)
+        self.button_browse_folder.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
+        self.label_file_pattern.setText(QCoreApplication.translate("MainWindow", u"File Pattern:", None))
+        self.input_file_pattern.setPlaceholderText(QCoreApplication.translate("MainWindow", u"(Optional) Enter patterns to search only specific files (comma-separated)", None))
         self.label_pattern_configuration.setText(QCoreApplication.translate("MainWindow", u"Pattern Configuration:", None))
 #if QT_CONFIG(tooltip)
         self.button_refresh_configuration.setToolTip(QCoreApplication.translate("MainWindow", u"Refresh the \u00fcatterns if new files were added to the patterns folder.", None))
@@ -425,14 +433,6 @@ class Ui_MainWindow(object):
         self.button_pattern_configuration_info.setToolTip(QCoreApplication.translate("MainWindow", u"Show relevant info about the selected pattern configuration.", None))
 #endif // QT_CONFIG(tooltip)
         self.button_pattern_configuration_info.setText("")
-        self.label_files_directory.setText(QCoreApplication.translate("MainWindow", u"Files Directory:", None))
-        self.input_browse_folder.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Select a folder containing text based files to search...", None))
-#if QT_CONFIG(tooltip)
-        self.button_browse_folder.setToolTip(QCoreApplication.translate("MainWindow", u"Browse folder directory.", None))
-#endif // QT_CONFIG(tooltip)
-        self.button_browse_folder.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
-        self.label_file_pattern.setText(QCoreApplication.translate("MainWindow", u"File Pattern:", None))
-        self.input_file_pattern.setPlaceholderText(QCoreApplication.translate("MainWindow", u"(Optional) Enter patterns to search only specific files (comma-separated)", None))
 #if QT_CONFIG(tooltip)
         self.button_parse_files.setToolTip(QCoreApplication.translate("MainWindow", u"Parse and search the found files in the folder and display it's results into the table below.", None))
 #endif // QT_CONFIG(tooltip)

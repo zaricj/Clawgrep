@@ -12,10 +12,7 @@ class ComboBoxEventHandler:
         self.ui = main_window.ui
 
         # Init combobox
-        combobox_config = self.ui.combobox_configuration
-        self.populate_patterns_combobox(
-            combobox_config
-        )  # Fill the combobox with the available pattern configuration files
+        self.populate_patterns_combobox()  # Fill the combobox with the available pattern configuration files
 
     def connect_signals(self):
         """Connect all combobox events to their handlers."""
@@ -26,12 +23,11 @@ class ComboBoxEventHandler:
 
     # ===== UI Events =====
 
-    def populate_patterns_combobox(self, combobox: QComboBox):
+    def populate_patterns_combobox(self):
         profiles = self.main_window.log_pattern_handler.get("profiles")
         if isinstance(profiles, dict) and profiles:
-            default_profile = self.main_window.log_pattern_handler.get(
-                "default_profile"
-            )
+            combobox = self.ui.combobox_configuration
+            default_profile = self.main_window.log_pattern_handler.get("default_profile")
             combobox.clear()
             combobox.addItems(sorted(profiles.keys()))
             if isinstance(default_profile, str) and default_profile in profiles:
