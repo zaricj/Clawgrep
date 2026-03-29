@@ -64,6 +64,7 @@ def write_rows_to_csv(csv_output_file: Path, headers: list[str], rows: iter) -> 
             lines_written += 1
     return lines_written
 
+# === Main Execution Method ===
 
 def extract_and_write_to_csv(csv_output_file: str | Path):
     try:
@@ -82,6 +83,7 @@ def extract_and_write_to_csv(csv_output_file: str | Path):
     except Exception as err:
         print(f"An error of type {type(err).__name__} occurred.\nError message: {str(err)}\nArguments: {err.args}")
 
+# ==================================================
 
 # ========== MAIN ==========
 if __name__ == "__main__":
