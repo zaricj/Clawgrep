@@ -15,12 +15,12 @@ FILE_PATTERN = "*.log"
 LOGS_PATH = Path("logs")
 
 
-def load_sql_config() -> tuple:
-    """Load and compile SQL patterns. Returns (compiled_sql, header_regex)."""
+def load_and_compile_pattern_config() -> tuple:
+    """Load and compile pattern configurations. Returns (compiled_patterns, header_regex)."""
     patterns_json = load_patterns_json(PATTERNS_CONFIG)
-    compiled_sql = compile_regex_patterns(patterns_json["sql_exceptions"])
-    header_regex = compiled_sql["base"]["header"]
-    return compiled_sql, header_regex
+    compiled_patterns = compile_regex_patterns(patterns_json["sql_exceptions"])
+    header_regex = compiled_patterns["base"]["header"]
+    return compiled_patterns, header_regex
 
 
 def iter_rows(list_of_files: list[Path], header_regex, compiled_sql, event_keyword: str = "") -> iter:
@@ -69,7 +69,7 @@ def write_rows_to_csv(csv_output_file: Path, headers: list[str], rows: iter) -> 
 def extract_and_write_to_csv(csv_output_file: str | Path):
     try:
         event_keyword = "" # Empty to grab all, you can use something like 'sql' to limit matches to the specific keyword
-        compiled_sql, header_regex = load_sql_config()
+        compiled_sql, header_regex = load_and_compile_pattern_config()
         log_files = get_files_in_folder(LOGS_PATH, FILE_PATTERN)
 
         print("Grabbing headers from sample file...")

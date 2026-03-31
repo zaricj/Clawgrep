@@ -26,6 +26,15 @@ def compile_regex_patterns(category_config: dict):
 # ========== Utility ==========
 
 def yield_event_block(filepath: str | Path, header_pattern: str | re.Pattern):
+    """Yields the files event block, using a header/separator pattern
+
+    Args:
+        filepath (str | Path): Thefile to read and yield event blocks from
+        header_pattern (str | re.Pattern): The pattern to identify the start of an event block
+
+    Yields:
+        str: The text block of the event
+    """
     
     if isinstance(header_pattern, str):
         header_pattern = re.compile(header_pattern)
@@ -50,7 +59,15 @@ def yield_event_block(filepath: str | Path, header_pattern: str | re.Pattern):
 
 
 def extract_event_fields(event_block: str, compiled_patterns: dict):
-    """Extract fields using compiled regexes"""
+    """Extract fields using compiled regexes
+
+    Args:
+        event_block (str): The text block of the event, which contains all the info we want to extract
+        compiled_patterns (dict): A dictionary of compiled regex patterns
+
+    Returns:
+        dict: A dictionary containing the extracted fields
+    """
     row = {}
 
     # Extract base info (timestamp, source)
