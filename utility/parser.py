@@ -10,7 +10,7 @@ def yield_event_block(filepath: str | Path, header_pattern: str | re.Pattern):
     """Yields the files event block, using a header/separator pattern
 
     Args:
-        filepath (str | Path): Thefile to read and yield event blocks from
+        filepath (str | Path): The file to read and yield event blocks from
         header_pattern (str | re.Pattern): The pattern to identify the start of an event block
 
     Yields:

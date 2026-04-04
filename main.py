@@ -7,7 +7,10 @@ if __name__ == "__main__":
     PATTERN_KEY = "sql_exceptions"
     FILE_PATTERN = "*.log"
     LOGS_PATH = Path("logs")
-    CSV_FILE = Path("CSV_Results.csv")
+    
+    # CSV output
+    OUTPUT_DIR = Path("output")
+    CSV_FILE = OUTPUT_DIR / "Result.csv"
     
     # Test run config
     SAMPLE_FILE = Path("sample.log")
@@ -15,7 +18,7 @@ if __name__ == "__main__":
     #TODO Every single pattern key in patterns.json must contain a regex with multiple groups that will be used to search in an event block in log file.
     #TODO This makes sure that a single line contains all the matches from the same even block
     
-    normal_run = run_pipeline(
+    run_pipeline(
         patterns_config=PATTERNS_CONFIG,
         pattern_key=PATTERN_KEY,
         files=LOGS_PATH,

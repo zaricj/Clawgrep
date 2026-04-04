@@ -6,7 +6,8 @@ from utility.core import (
     load_patterns_json,
     compile_regex_patterns,
     get_files_in_folder,
-    validate_input
+    validate_input,
+    create_directory
 )
 
 from utility.parser import (
@@ -82,7 +83,21 @@ def collect_rows_and_headers(files, header_regex, compiled, keyword):
 # ========== CSV ==========
 
 def write_csv(output: Path, headers: list[str], rows: Iterator[dict]) -> int:
+    """Writes rows to a CSV file with the specified headers.
+
+    Args:
+        output (Path): The path to the output CSV file.
+        headers (list[str]): A list of column headers for the CSV.
+        rows (Iterator[dict]): An iterator over dictionaries representing each row.
+
+    Returns:
+        int: The number of rows written to the CSV file.
+    """
     count = 0
+    
+    exists = validate_input(output)
+    if not exists:
+        create_directory(output)
 
     with open(output, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(

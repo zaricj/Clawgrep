@@ -39,8 +39,7 @@ def validate_input(file: Path | str) -> bool:
             raise FileNotFoundError(f"The specified file '{file}' does not exist.")
         else:
             return True
-    except Exception as ex:
-        print(f"Input validation error: {ex}")
+    except FileNotFoundError:
         return False
 
 
@@ -56,7 +55,16 @@ def get_files_in_folder(directory: Path, file_pattern: str = "*.log") -> list[Pa
     """
     if directory.is_dir() and directory.exists():
         return list(directory.glob(file_pattern))
+
+
+def create_directory(directory: Path | str):
+    if isinstance(directory, str):
+        directory = Path(directory)
     
+    Path.mkdir(directory.parent, exist_ok=True)
+    print(f"Created directory successfully: '{directory.__str__()}'")
+
+
 # ========== Excel Conversion ==========
 
 def convert_csv_to_excel(input_csv_file: Path, output_excel_file: Path):
