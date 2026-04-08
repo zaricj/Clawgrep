@@ -1,4 +1,5 @@
 import csv
+import re
 from pathlib import Path
 from typing import Iterator
 
@@ -7,20 +8,21 @@ from utility.core import (
     compile_regex_patterns,
     get_files_in_folder,
     validate_input,
-    create_directory
+    create_directory,
 )
 
 from utility.parser import (
     yield_event_block,
     extract_matches_from_event_block,
     is_keyword_event,
-    extract_log_date
+    extract_log_date,
+    yield_event_block_with_progress
 )
 
 
 # ========== Config ==========
 
-def load_config(patterns_config: Path, pattern_key: str):
+def load_config(patterns_config: Path, pattern_key: str) -> re.Pattern | str:
     if not validate_input(patterns_config):
         raise FileNotFoundError(patterns_config)
 
@@ -37,7 +39,13 @@ def load_config(patterns_config: Path, pattern_key: str):
 
 # ========== Rows and headers Generator ==========
 
-def collect_rows_and_headers(files, header_regex, compiled, keyword):
+def collect_rows_and_headers(
+    files: list,
+    header_regex,
+    compiled,
+    keyword: str,
+    show_progress: bool
+):
     headers = []
     rows = []
 
@@ -45,24 +53,29 @@ def collect_rows_and_headers(files, header_regex, compiled, keyword):
         log_date = extract_log_date(file)
         print(f"Processing: {file}")
 
-        for block in yield_event_block(file, header_regex):
+        # Choose generator once
+        block_iter = (
+            yield_event_block_with_progress(file, header_regex)
+            if show_progress
+            else yield_event_block(file, header_regex)
+        )
+
+        for block in block_iter:
             if keyword and not is_keyword_event(keyword, block):
                 continue
 
             row = extract_matches_from_event_block(block, compiled)
-
             if not row:
                 continue
 
-            # --- timestamp handling ---
+            # timestamp handling
             if "time" in row:
-                timestamp_str = f"{log_date} {row['time']}"
-                row["timestamp"] = timestamp_str.strip()
+                row["timestamp"] = f"{log_date} {row['time']}".strip()
                 del row["time"]
             else:
                 row["timestamp"] = log_date
 
-            # --- filter empty rows (ignore timestamp) ---
+            # filter empty rows (ignore timestamp)
             if not any(
                 v not in (None, "")
                 for k, v in row.items()
@@ -70,8 +83,8 @@ def collect_rows_and_headers(files, header_regex, compiled, keyword):
             ):
                 continue
 
-            # --- collect headers (ordered, no duplicates) ---
-            for key in row.keys():
+            # collect headers (ordered, no duplicates)
+            for key in row:
                 if key not in headers:
                     headers.append(key)
 
@@ -94,7 +107,7 @@ def write_csv(output: Path, headers: list[str], rows: Iterator[dict]) -> int:
         int: The number of rows written to the CSV file.
     """
     count = 0
-    
+
     exists = validate_input(output)
     if not exists:
         create_directory(output)
@@ -118,33 +131,34 @@ def write_csv(output: Path, headers: list[str], rows: Iterator[dict]) -> int:
     return count
 
 
-# ---------- Pipeline ----------
+# ========== Pipeline ==========
 
 def run_pipeline(
-    patterns_config: Path,
-    pattern_key: str,
-    files: Path,
-    file_pattern: str,
-    output_csv: Path,
-    event_keyword: str = ""):
-    
+        patterns_config: Path,
+        pattern_key: str,
+        files_directory: Path,
+        file_pattern: str,
+        output_csv: Path,
+        event_keyword: str = "",
+        show_progress: bool = False):
+
     compiled, header_regex = load_config(patterns_config, pattern_key)
 
-    files = get_files_in_folder(files, file_pattern)
+    files = get_files_in_folder(files_directory, file_pattern)
 
     if not files:
         raise ValueError("No log files found")
 
     # Collect rows + headers in one pass
     rows, headers = collect_rows_and_headers(
-        files, header_regex, compiled, event_keyword
+        files, header_regex, compiled, event_keyword, show_progress
     )
 
     # Normalize headers
-    headers = ["timestamp"] + [h for h in headers if h not in ("time", "timestamp")]
+    headers = ["timestamp"] + \
+        [h for h in headers if h not in ("time", "timestamp")]
 
     # Write CSV
     count = write_csv(output_csv, headers, rows)
 
     print(f"\nDone. {count} rows written to {output_csv}")
-    

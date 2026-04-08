@@ -3,6 +3,7 @@ import json
 import re
 import csv
 import xlsxwriter
+from typing import TextIO
 
 # ========== Load & Compile Patterns ==========
 
@@ -43,7 +44,22 @@ def validate_input(file: Path | str) -> bool:
         return False
 
 
-def get_files_in_folder(directory: Path, file_pattern: str = "*.log") -> list[Path]:
+def count_lines(file: TextIO) -> int:
+    # Source - https://stackoverflow.com/a/9631635
+    # Posted by glglgl, modified by community. See post 'Timeline' for change history
+    # Retrieved 2026-04-07, License - CC BY-SA 3.0
+
+    def blocks(file: TextIO, size: int = 65536):
+        while True:
+            b = file.read(size)
+            if not b: 
+                break
+            yield b
+            
+    return sum(bl.count("\n") for bl in blocks(file))
+
+
+def get_files_in_folder(directory: Path | str, file_pattern: str = "*.log") -> list[Path]:
     """Get files from a directory, of specific type
 
     Args:
@@ -53,6 +69,9 @@ def get_files_in_folder(directory: Path, file_pattern: str = "*.log") -> list[Pa
     Returns:
         list[Path]: List of found files in the directory.
     """
+    if isinstance(directory, str):
+        directory = Path(directory)
+        
     if directory.is_dir() and directory.exists():
         return list(directory.glob(file_pattern))
 

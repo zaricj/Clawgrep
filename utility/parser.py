@@ -2,6 +2,10 @@ import re
 from pathlib import Path
 from typing import Dict
 from datetime import datetime
+from tqdm import tqdm
+from typing import Iterator
+
+from utility.core import count_lines
 
 
 # ========== Utility ==========
@@ -34,6 +38,30 @@ def yield_event_block(filepath: str | Path, header_pattern: str | re.Pattern):
             
             buffer.append(line)
             
+        if buffer:
+            yield "".join(buffer)
+
+
+def yield_event_block_with_progress(
+    filepath: Path,
+    header_pattern: re.Pattern,
+) -> Iterator[str]:
+    
+    if isinstance(header_pattern, str):
+        header_pattern = re.compile(header_pattern)
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        total_lines = count_lines(f)
+        f.seek(0)
+
+        buffer: list[str] = []
+        for line in tqdm(f, total=total_lines, desc=filepath.name):
+            if header_pattern.match(line):
+                if buffer:
+                    yield "".join(buffer)
+                    buffer.clear()
+            buffer.append(line)
+
         if buffer:
             yield "".join(buffer)
 
@@ -76,11 +104,11 @@ def extract_log_date(filepath: Path) -> str:
         date = match.group()
         return date
     
-    # Else if none was found continue from the withing the log file
+    # Else if none was found continue from within the file, usually if it's a log file it has a date in the beginning
     date_regex = re.compile(r"opened at (?P<date>.+?\d{4})")
     
     with open(filepath, "r", encoding="utf-8") as f:
-        for _ in range(10):  # only scan first lines (fast)
+        for _ in range(10):  # only scan first lines
             line = f.readline()
             if not line:
                 break
@@ -89,10 +117,8 @@ def extract_log_date(filepath: Path) -> str:
             
             if match:
                 raw_date = match.group("date")
-                # Remove timezone (CET)
-                cleaned_date = re.sub(r"\b[A-Z]{3}\b", "", raw_date).strip()
+                cleaned_date = re.sub(r"\b[A-Z]{3,4}\b", "", raw_date).strip()
 
-                # Convert to datetime
                 dt = datetime.strptime(cleaned_date, "%a %b %d %H:%M:%S %Y")
                 date = dt.strftime("%Y-%m-%d")
                 # Return ISO date
