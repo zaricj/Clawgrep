@@ -5,7 +5,7 @@ from utility.patterns import get_pattern_keys
 if __name__ == "__main__":
 
     PATTERNS_CONFIG = Path("patterns/patterns.json")
-    PATTERN_KEY = "sql_exceptions"
+    PATTERN_KEY = "ftp_per_profile"
     FILE_PATTERN = "*.log"
     FILES_DIR = Path("logs")
 
@@ -20,11 +20,11 @@ if __name__ == "__main__":
     # TODO This makes sure that a single line contains all the matches from the same even block
     
     # Load all pattern config keys
-    # patterns = get_pattern_keys(PATTERNS_CONFIG)
+    patterns = get_pattern_keys(PATTERNS_CONFIG)
 
     run_pipeline(
         patterns_config=PATTERNS_CONFIG,
-        pattern_key="db_pool_size_exceeded",
+        pattern_key=PATTERN_KEY,
         files_directory=FILES_DIR,
         file_pattern=FILE_PATTERN,
         output_csv=CSV_FILE,

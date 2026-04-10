@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 
 from utility.config import load_config

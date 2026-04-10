@@ -1,9 +1,8 @@
 import re
 from pathlib import Path
-from typing import Dict
 from datetime import datetime
 from tqdm import tqdm
-from typing import Iterator
+from typing import (Iterator, Dict)
 
 from utility.file_utils import count_lines
 

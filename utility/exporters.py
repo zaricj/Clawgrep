@@ -7,7 +7,6 @@ from utility.file_utils import validate_input, create_directory
 
 # ========== CSV ==========
 
-
 def write_csv(output: Path, headers: list[str], rows: Iterator[dict]) -> int:
     """Writes rows to a CSV file with the specified headers.
 
@@ -45,12 +44,12 @@ def write_csv(output: Path, headers: list[str], rows: Iterator[dict]) -> int:
 
 # ========== Excel Conversion ==========
 
-
 def convert_csv_to_excel(input_csv_file: Path, output_excel_file: Path):
     # Validate csv input file
     is_csv_valid = validate_input(input_csv_file)
 
     if is_csv_valid:
+        print("Converting CSV to Excel, please wait...")
         # Create a new Excel workbook and add a worksheet
         workbook = xlsxwriter.Workbook(str(output_excel_file))
         worksheet = workbook.add_worksheet("Data")
