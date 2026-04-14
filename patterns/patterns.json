@@ -23,5 +23,13 @@
     "patterns": {
       "default": "Job:\\s*(?P<Job>\\d+)\\s+\\[(?P<Profile>[^\\]]+)\\].*?Start to send response.*?by FTP.*?Comm\\.Channel=(?P<Channel>[^,]+).*?file=(?P<File>[^\\s\\)]+)"
     }
+  },
+  "http_requests_jasperserver": {
+    "base": {
+      "header": "^.*?\\[(?P<time>\\d{2}/\\w{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2})"
+    },
+    "patterns": {
+      "default": "^(?P<ip>\\S+)\\s(?P<logname>\\S+)\\s(?P<user>\\S+)\\s\\[(?P<timestamp>\\d{2}/\\w{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2})\\s(?P<timezone>[^\\]]+)\\]\\s\"(?P<method>[A-Z]+)\\s(?P<path>\\S+)\\sHTTP\\/(?P<protocol>\\d\\.\\d)\"\\s(?P<status>\\d{3})\\s(?P<size>\\d+)\\s(?P<duration>\\d+)$"
+    }
   }
 }
