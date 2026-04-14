@@ -1,10 +1,10 @@
 from pathlib import Path
-from utility.pipeline import run_pipeline
+from modules.core.pipeline import run_pipeline
 
 if __name__ == "__main__":
 
     PATTERNS_CONFIG = Path("patterns/patterns.json")
-    PATTERN_KEY = "ftp_per_profile"
+    PATTERN_KEY = "sql_exceptions"
     FILE_PATTERN = "*.log"
     FILES_DIR = Path("logs")
 

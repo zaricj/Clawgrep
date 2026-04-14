@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from utility.config import load_config
-from utility.file_utils import get_files_in_folder
-from utility.exporters import write_csv, convert_csv_to_excel
-from utility.parser import (
+from modules.config.config import load_config
+from modules.io.file_utils import get_files_in_folder
+from modules.io.exporters import write_csv, convert_csv_to_excel
+from modules.core.parser import (
     yield_event_block,
     extract_matches_from_event_block,
     is_keyword_event,
