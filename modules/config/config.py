@@ -1,8 +1,8 @@
 import re
 from pathlib import Path
 
-from utility.patterns import load_patterns_json, compile_regex_patterns
-from utility.file_utils import validate_input
+from modules.utils.utilities import load_patterns_json, compile_regex_patterns
+from modules.io.file_utils import validate_input
 
 # ========== Config ==========
 

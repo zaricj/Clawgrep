@@ -4,7 +4,7 @@ from datetime import datetime
 from tqdm import tqdm
 from typing import (Iterator, Dict)
 
-from utility.file_utils import count_lines
+from modules.io.file_utils import count_lines
 
 
 # ========== Utility ==========
@@ -95,7 +95,7 @@ def extract_log_date(filepath: Path) -> str:
     date = ""
     
     # Try first from the file name, if the filename contains a date
-    date_regex = re.compile(r"\d{4}_\d{2}_\d{2}")
+    date_regex = re.compile(r"\d{4}[-_.]\d{2}[-_.]\d{2}") # Matches the patterns: 2026-04-13, 2026_04_13
     match = date_regex.search(filepath.with_suffix("").name)
     
     if match:
