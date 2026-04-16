@@ -62,9 +62,11 @@ def yield_event_block_with_progress(
 
 def extract_matches_from_event_block(event_block: str, compiled_patterns: dict) -> Dict[str, str]:
     """Extract the matches from the event block of text, with the compiled regex patterns.
+    Uses a non-destructive update: later patterns will not overwrite keys already 
+    found by earlier patterns.
 
     Args:
-        event_block (str): The text block of the event, which contains all the info we want to extract from.
+        event_block (str): The text block of the event.
         compiled_patterns (dict): A dictionary of compiled regex patterns.
 
     Returns:
@@ -72,12 +74,26 @@ def extract_matches_from_event_block(event_block: str, compiled_patterns: dict) 
     """
     row = {}
 
-    # Base (e.g. time)
-    for _, regex in compiled_patterns["base"].items():
+    # 1. Process "base" patterns (e.g., time/separator info)
+    for _, regex in compiled_patterns.get("base", {}).items():
         match = regex.search(event_block)
         if match:
-            row.update(match.groupdict())
+            for key, value in match.groupdict().items():
+                # Only set if the key is new or current value is empty
+                if value and not row.get(key):
+                    row[key] = value
 
+    # 2. Process "patterns" (the specific match extractors)
+    for _, regex in compiled_patterns.get("patterns", {}).items():
+        match = regex.search(event_block)
+        if match:
+            new_data = match.groupdict()
+            for key, value in new_data.items():
+                # NON-DESTRUCTIVE: Keep the first non-empty value found
+                # If match was found by pattern A, pattern B won't overwrite it.
+                if value and not row.get(key):
+                    row[key] = value
+                    
     # Patterns
     for _, regex in compiled_patterns["patterns"].items():
         match = regex.search(event_block)
