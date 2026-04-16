@@ -9,52 +9,48 @@ from modules.io.file_utils import count_lines
 
 # ========== Utility ==========
 
-def yield_event_block(filepath: str | Path, header_pattern: str | re.Pattern):
-    """Yields the files event block, using a header/separator pattern
+def yield_event_block(filepath: str | Path, separator_pattern: str | re.Pattern):
+    """Yields the files event block, using a separator pattern
 
     Args:
         filepath (str | Path): The file to read and yield event blocks from
-        header_pattern (str | re.Pattern): The pattern to identify the start of an event block
+        separator_pattern (str | re.Pattern): The pattern to identify the start of an event block.
 
     Yields:
-        str: The text block of the event
+        str: Yields a block of text, starting from the first matching separator pattern until the next one.
     """
-    
-    if isinstance(header_pattern, str):
-        header_pattern = re.compile(header_pattern)
-        
+
+    if isinstance(separator_pattern, str):
+        separator_pattern = re.compile(separator_pattern)
+
     buffer = []
     with open(filepath, "r", encoding="utf-8") as f:
         for line in f:
-            if header_pattern.match(line):
+            if separator_pattern.match(line):
                 if buffer:
                     yield "".join(buffer)
                     buffer.clear()
-                    
-            # Ignore keywords can be added here, for now the text "at" will be ignored
-            #if line.startswith("at"):
-            #    continue
-            
+
             buffer.append(line)
-            
+
         if buffer:
             yield "".join(buffer)
 
 
 def yield_event_block_with_progress(
     filepath: Path,
-    header_pattern: re.Pattern,
+    separator_pattern: re.Pattern,
 ) -> Iterator[str]:
-    
-    if isinstance(header_pattern, str):
-        header_pattern = re.compile(header_pattern)
+
+    if isinstance(separator_pattern, str):
+        separator_pattern = re.compile(separator_pattern)
 
     with open(filepath, "r", encoding="utf-8") as f:
         total_lines = count_lines(filepath)
         buffer: list[str] = []
-        
+
         for line in tqdm(f, total=total_lines, desc=filepath.name):
-            if header_pattern.match(line):
+            if separator_pattern.match(line):
                 if buffer:
                     yield "".join(buffer)
                     buffer.clear()
@@ -93,28 +89,29 @@ def extract_matches_from_event_block(event_block: str, compiled_patterns: dict) 
 
 def extract_log_date(filepath: Path) -> str:
     date = ""
-    
+
     # Try first from the file name, if the filename contains a date
-    date_regex = re.compile(r"\d{4}[-_.]\d{2}[-_.]\d{2}") # Matches the patterns: 2026-04-13, 2026_04_13
+    # Matches the patterns: 2026-04-13, 2026_04_13
+    date_regex = re.compile(r"\d{4}[-_.]\d{2}[-_.]\d{2}")
     match = date_regex.search(filepath.with_suffix("").name)
-    
+
     if match:
         date = match.group()
-        if "_" in date: # Replace underlines with dots in date string
-            date = date.replace("_", ".")  
+        if "_" in date:  # Replace underlines with dots in date string
+            date = date.replace("_", ".")
         return date
-    
+
     # Else if none was found continue from within the file, usually if it's a log file it has a date in the beginning
     date_regex = re.compile(r"opened at (?P<date>.+?\d{4})")
-    
+
     with open(filepath, "r", encoding="utf-8") as f:
         for _ in range(10):  # only scan first lines
             line = f.readline()
             if not line:
                 break
-            
+
             match = date_regex.search(line)
-            
+
             if match:
                 raw_date = match.group("date")
                 cleaned_date = re.sub(r"\b[A-Z]{3,4}\b", "", raw_date).strip()

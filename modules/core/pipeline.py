@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from modules.config.config import load_config
+from modules.config.config import load_pattern_search_rule
 from modules.io.file_utils import get_files_in_folder
 from modules.io.exporters import write_csv, convert_csv_to_excel
 from modules.core.parser import (
@@ -15,7 +15,7 @@ from modules.core.parser import (
 
 def collect_rows_and_headers(
     files: list,
-    header_regex,
+    separator_regex,
     compiled,
     keyword: str,
     show_progress: bool
@@ -29,9 +29,9 @@ def collect_rows_and_headers(
 
         # Choose generator once
         block_iter = (
-            yield_event_block_with_progress(file, header_regex)
+            yield_event_block_with_progress(file, separator_regex)
             if show_progress
-            else yield_event_block(file, header_regex)
+            else yield_event_block(file, separator_regex)
         )
 
         for block in block_iter:
@@ -78,16 +78,18 @@ def run_pipeline(
         event_keyword: str = "",
         show_progress: bool = False):
 
-    compiled, header_regex = load_config(patterns_config, pattern_key)
+    compiled, separator_regex = load_pattern_search_rule(
+        patterns_config, pattern_key)
 
     files = get_files_in_folder(files_directory, file_pattern)
 
     if not files:
-        raise ValueError(f"No files found in {files_directory}, using pattern {file_pattern}")
+        raise ValueError(
+            f"No files found in {files_directory}, using pattern {file_pattern}")
 
     # Collect rows + headers in one pass
     rows, headers = collect_rows_and_headers(
-        files, header_regex, compiled, event_keyword, show_progress
+        files, separator_regex, compiled, event_keyword, show_progress
     )
 
     # Normalize headers
@@ -99,7 +101,7 @@ def run_pipeline(
         count = write_csv(output_csv, headers, rows)
         print(f"\nDone. {count} rows written to {output_csv}")
         # Convert to excel
-        output_excel =  output_csv.with_suffix(".xlsx")
+        output_excel = output_csv.with_suffix(".xlsx")
         convert_csv_to_excel(output_csv, output_excel)
     else:
         print("No matches found, nothing to write.")

@@ -19,9 +19,10 @@ def compile_regex(pattern: str, flags=0):
 
 
 def compile_regex_patterns(category_config: dict):
-    """Compile base header + patterns for one category"""
+    """Compile base separator + patterns for one category"""
     compiled = {}
-    compiled["base"] = {name: re.compile(p) for name, p in category_config.get("base", {}).items()}
-    compiled["patterns"] = {name: re.compile(p, re.MULTILINE | re.DOTALL) 
+    compiled["base"] = {name: re.compile(
+        p) for name, p in category_config.get("base", {}).items()}
+    compiled["patterns"] = {name: re.compile(p, re.MULTILINE | re.DOTALL)
                             for name, p in category_config.get("patterns", {}).items()}
     return compiled

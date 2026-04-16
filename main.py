@@ -5,8 +5,8 @@ if __name__ == "__main__":
 
     PATTERNS_CONFIG = Path("patterns/patterns.json")
     PATTERN_KEY = "sql_exceptions"
-    FILE_PATTERN = "*.log"
-    FILES_DIR = Path("logs")
+    FILE_PATTERN = "*.out"
+    FILES_DIR = Path(r"C:\Users\ZaricJ\Downloads\Druckserver Auswertung\NESAS015")
 
     # CSV output
     OUTPUT_DIR = Path("output")
