@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     # CSV output
     OUTPUT_DIR = Path("output")
-    TIMESTAMP_PREFIX = datetime.now().strftime("%d_%m_%Y %H%M%S")
+    TIMESTAMP_PREFIX = datetime.now().strftime("%d_%m_%Y_%H%M%S")
     CSV_FILE = OUTPUT_DIR / f"Result_{TIMESTAMP_PREFIX}.csv"
     
 
