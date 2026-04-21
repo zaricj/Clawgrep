@@ -9,6 +9,7 @@ _MONTH_MAP = {
 }
 
 _DATETIME_FORMATS = [
+    "%d/%b/%Y:%H:%M:%S",       # 15/Apr/2026:00:00:10 (localhost https-request logs)
     "%d-%b-%Y %H:%M:%S.%f",   # 19-Jan-2026 06:48:33.088  (Tomcat SEVERE)
     "%d-%b-%Y %H:%M:%S",      # 19-Jan-2026 06:48:33
     "%Y-%m-%dT%H:%M:%S,%f",   # 2026-01-19T07:33:23,289   (ISO 8601, comma ms)
@@ -25,6 +26,8 @@ _FULL_DATETIME_PATTERNS = [
     re.compile(r"\d{1,2}-[A-Za-z]{3}-\d{4}\s+\d{2}:\d{2}:\d{2}"),
     # 2026-01-19T07:33:23,289  or  2026-01-19 07:33:23
     re.compile(r"\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}"),
+    # 15/Apr/2026:06:15:40
+    re.compile(r"\d{1,2}/[A-Za-z]{3}/\d{4}:\d{2}:\d{2}:\d{2}")
     # Add more formats if needed
 ]
 
