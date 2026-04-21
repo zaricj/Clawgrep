@@ -209,6 +209,9 @@ __marimo__/
 
 # Personal additions
 output
+logs/*.txt
+logs/*.log
+logs/*.out
 *.csv
 *.zip
 *.7z
