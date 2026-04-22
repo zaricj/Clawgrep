@@ -62,4 +62,4 @@ def run_pipeline(
         total_time = f"{end - start:.2f}" # Total time taken
         display_finished_msg(output_csv, count, total_time, excel_msg, rows_found=True)
     else:
-        display_finished_msg(output_csv, 0, total_time, "", rows_found=False)
+        display_finished_msg(output_csv, 0, "0", "", rows_found=False)
