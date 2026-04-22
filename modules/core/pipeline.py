@@ -1,13 +1,13 @@
 from pathlib import Path
+import time
 from rich.console import Console
 from rich.panel import Panel
 from rich import print as rprint
 
-import time
-
-from modules.config.config import load_pattern_search_rule
+from modules.io.converters import str_to_path
 from modules.io.file_utils import get_files_in_folder
 from modules.io.exporters import (write_csv, convert_csv_to_excel)
+from modules.config.config import load_pattern_search_rule
 from modules.core.utils import collect_rows_and_headers
 
 def display_finished_msg(output_csv: Path, count: int, total_time: str, excel_msg: str, rows_found: bool):
@@ -26,15 +26,25 @@ def display_finished_msg(output_csv: Path, count: int, total_time: str, excel_ms
 # ========== Pipeline ==========
 
 def run_pipeline(
-        patterns_config: Path,
+        patterns_config: str | Path,
         pattern_key: str,
-        files_directory: Path,
+        files_directory: str | Path,
         file_pattern: str,
-        output_csv: Path,
+        output_csv: str | Path,
         event_keyword: str = "",
         show_progress: bool = False
 ):
     Console().rule("Starting pipeline task")
+    
+    # Str to Path conversion if needed
+    for i, obj in enumerate([patterns_config, files_directory, output_csv]):
+        match i:
+            case 0:
+                patterns_config = str_to_path(obj)
+            case 1:
+                files_directory = str_to_path(obj)
+            case 2:
+                output_csv = str_to_path(obj)
     
     start = time.time() # Process start time
 
