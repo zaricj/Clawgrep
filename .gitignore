@@ -216,3 +216,4 @@ logs/*.out
 *.zip
 *.7z
 *.rar
+all_in_one.py
