@@ -1,6 +1,6 @@
-# LobsterLogReporter
+# Clawgrep 🦞
 
-A log file analysis and pattern extraction tool designed to search through log files and extract specific information using regex patterns.
+A file analysis and pattern extraction tool designed to search through any type of text files, ideally something like log files with repeating patterns and extract specific information using regex patterns.
 
 ## Core Functionality
 
@@ -13,7 +13,7 @@ A log file analysis and pattern extraction tool designed to search through log f
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                    LobsterLogReporter                            │
+│                    Clawgrep                                      │
 ├──────────────────────────────────────────────────────────────────┤
 │  main.py                  │ Entry point, orchestrates pipeline   │
 │                           │                                      │
@@ -42,7 +42,7 @@ A log file analysis and pattern extraction tool designed to search through log f
 
 ## Key Features
 
-- **Threaded Processing**: Uses `ThreadPoolExecutor` for parallel file processing (up to 32 workers)
+- **Threaded Processing**: Uses `ThreadPoolExecutor` for parallel file processing
 - **Progress Tracking**: Optional progress bar with `tqdm`
 - **Flexible Pattern Configuration**: JSON-based pattern definitions
 - **Multiple Log Formats**: Supports various log formats:
