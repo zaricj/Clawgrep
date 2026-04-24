@@ -7,15 +7,14 @@ from rich import print as rprint
 from modules.config.config import load_pattern_search_rule
 from modules.core.utils import collect_rows
 from modules.core.ui import CONSOLE
-from modules.io.converters import str_to_path
 from modules.io.file_utils import get_files_in_folder
 from modules.io.exporters import write_csv, convert_csv_to_excel
 
 
 def display_start_msg(
-    patterns_config: str | Path,
+    patterns_config: Path,
     pattern_key: str,
-    files_directory: str | Path,
+    files_directory: Path,
     file_pattern: str,
     event_keyword: str,
 ):
@@ -47,24 +46,14 @@ def display_finished_msg(output_csv: str, excel_filename: str, total_time: str, 
 
 
 def run_pipeline(
-    patterns_config: str | Path,
+    patterns_config: Path,
     pattern_key: str,
-    files_directory: str | Path,
+    files_directory: Path,
     file_pattern: str,
-    output_csv: str | Path,
+    output_csv: Path,
     event_keyword: str = "",
     show_progress: bool = False,
 ):
-
-    # Str to Path conversion if needed
-    for i, obj in enumerate([patterns_config, files_directory, output_csv]):
-        match i:
-            case 0:
-                patterns_config = str_to_path(obj)
-            case 1:
-                files_directory = str_to_path(obj)
-            case 2:
-                output_csv = str_to_path(obj)
                 
     display_start_msg(patterns_config, pattern_key, files_directory, file_pattern, event_keyword)
 
@@ -91,12 +80,12 @@ def run_pipeline(
         # Stitch the first row back together with the remaining generator
         full_generator = itertools.chain([first_row], row_generator)
         
-        # Pass the stitched generator to your writer
+        # Pass the stitched generator to the writer
         rprint("[bold]>>> Writing results to csv file...[/bold]")
         count = write_csv(output_csv, headers, full_generator)
         excel_filename = output_csv.with_suffix(".xlsx")
         
-        rprint(f"[bold green]✓ Writing to csv has finished, wrote [yellow]{count}[/yellow] rows...[/bold green]")
+        rprint(f"[bold green]✓ Writing to csv has finished, wrote [bold yellow]{count}[/bold yellow] rows...[/bold green]")
         convert_csv_to_excel(output_csv, excel_filename)  # Convert to excel
         rprint("[bold green]✓ CSV converted to excel format.[/bold green]")
         
