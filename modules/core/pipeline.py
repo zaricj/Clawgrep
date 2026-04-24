@@ -1,17 +1,15 @@
 from pathlib import Path
 import time
 import itertools
-from rich.console import Console
 from rich.panel import Panel
 from rich import print as rprint
 
+from modules.config.config import load_pattern_search_rule
+from modules.core.utils import collect_rows
+from modules.core.ui import CONSOLE
 from modules.io.converters import str_to_path
 from modules.io.file_utils import get_files_in_folder
 from modules.io.exporters import write_csv, convert_csv_to_excel
-from modules.config.config import load_pattern_search_rule
-from modules.core.utils import collect_rows, collect_headers
-
-CONSOLE = Console()
 
 
 def display_start_msg(
@@ -90,9 +88,8 @@ def run_pipeline(
         # Collect headers from the extracted first row
         headers = ["timestamp"] + [h for h in first_row.keys() if h not in ("time", "timestamp")]
         
-        # 3. Stitch the first row back together with the remaining generator
+        # Stitch the first row back together with the remaining generator
         full_generator = itertools.chain([first_row], row_generator)
-        
         
         # Pass the stitched generator to your writer
         rprint("[bold]>>> Writing results to csv file...[/bold]")
@@ -108,5 +105,4 @@ def run_pipeline(
         display_finished_msg(str(output_csv), str(excel_filename), total_time, True)
     else:
         # No rows found
-        display_finished_msg("", "", "0", False) # Adjusted to match your params
-
+        display_finished_msg("", "", "0", False)
