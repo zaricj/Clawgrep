@@ -1,7 +1,6 @@
 import json
 import re
 from pathlib import Path
-from rich import print as rprint
 from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
 
 from modules.core.parser import (yield_event_block, extract_matches_from_event_block)
