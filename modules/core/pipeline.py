@@ -2,11 +2,11 @@ from pathlib import Path
 import time
 import itertools
 from rich.panel import Panel
-from rich import print as rprint
+
 
 from modules.config.config import load_pattern_search_rule
 from modules.core.utils import collect_rows
-from modules.core.ui import CONSOLE
+from modules.core.ui import CONSOLE, rprint
 from modules.io.file_utils import get_files_in_folder
 from modules.io.exporters import write_csv, convert_csv_to_excel
 
@@ -44,44 +44,22 @@ def display_finished_msg(output_csv: str, excel_filename: str, total_time: str, 
 
 # ========== Pipeline ==========
 
-
-def run_pipeline(
-    patterns_config: Path,
-    pattern_key: str,
-    files_directory: Path,
-    file_pattern: str,
-    output_csv: Path,
-    event_keyword: str = "",
-    show_progress: bool = False,
-):
-                
-    display_start_msg(patterns_config, pattern_key, files_directory, file_pattern, event_keyword)
-
+def work(files, separator_regex, compiled, output_csv, event_keyword, show_progress):
     start = time.time()  # Process start time
-
-    compiled, separator_regex = load_pattern_search_rule(patterns_config, pattern_key)
-
-    files = get_files_in_folder(files_directory, file_pattern)
-
-    if not files:
-        raise ValueError(
-            f"No files found in {files_directory}, using pattern {file_pattern}"
-        )
-
+    excel_filename = ""
     # Collect rows as generator object
     row_generator = collect_rows(files, separator_regex, compiled, event_keyword, show_progress)
     first_row = next(row_generator, None)
-
+    
+    # Collect headers from the extracted first row
+    headers = ["timestamp"] + [h for h in first_row.keys() if h not in ("time", "timestamp")]
+    # Stitch the first row back together with the remaining generator
+    full_generator = itertools.chain([first_row], row_generator)
+    
     # Check if we actually yielded any data
-    if first_row is not None: 
-        # Collect headers from the extracted first row
-        headers = ["timestamp"] + [h for h in first_row.keys() if h not in ("time", "timestamp")]
-        
-        # Stitch the first row back together with the remaining generator
-        full_generator = itertools.chain([first_row], row_generator)
+    if full_generator is not None: 
         
         # Pass the stitched generator to the writer
-        rprint("[bold]>>> Writing results to csv file...[/bold]")
         count = write_csv(output_csv, headers, full_generator)
         rprint(f"[bold green]✓ Writing to csv has finished, wrote [bold yellow]{count}[/bold yellow] rows...[/bold green]")
         
@@ -92,10 +70,37 @@ def run_pipeline(
         else:
             rprint("[bold yellow]✖ CSV exceeds Excel's 1,048,576 row limit; Conversion to Excel is not possible.")
             excel_filename = ""
-            
-        end = time.time()
-        total_time = f"{end - start:.2f}"
+        result_flag = True
+    else:
+        result_flag = False
+        
+    end = time.time()
+    total_time = f"{end - start:.2f}"
+    
+    if result_flag:
         display_finished_msg(str(output_csv), str(excel_filename), total_time, True)
     else:
-        # No rows found
-        display_finished_msg("", "", "0", False)
+        display_finished_msg("", "", total_time, False)
+
+
+def run_pipeline(
+    patterns_config: Path,
+    pattern_key: str,
+    files_directory: Path,
+    file_pattern: str,
+    output_csv: Path,
+    event_keyword: str = "",
+    show_progress: bool = False,
+):
+    
+    display_start_msg(patterns_config, pattern_key, files_directory, file_pattern, event_keyword)
+
+    files = get_files_in_folder(files_directory, file_pattern)
+    
+    if not files:
+        raise ValueError(f"No files found in {files_directory}, using pattern {file_pattern}")
+    
+    compiled, separator_regex = load_pattern_search_rule(patterns_config, pattern_key)
+    
+    rprint("[bold]>>> Starting to search files and write matches to csv...[/bold]")
+    work(files, separator_regex, compiled, output_csv,event_keyword, show_progress)

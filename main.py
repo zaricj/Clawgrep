@@ -27,7 +27,7 @@ def main() -> None:
     PATTERN_KEY = "http_requests_jasperserver"
     
     # File(s) to search config
-    FILES_DIR = r"C:\Users\ZaricJ\Downloads\Druckserver Auswertung\NESAS015"
+    FILES_DIR = "logs"
     FILE_PATTERN = "*.txt"
     
     # CSV output
