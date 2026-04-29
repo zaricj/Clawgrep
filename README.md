@@ -1,4 +1,4 @@
-# Clawgrep 🦞
+# Glint ✨
 
 A file analysis and pattern extraction tool designed to search through any type of text files, ideally something like log files with repeating patterns and extract specific information using regex patterns.
 
@@ -13,32 +13,66 @@ A file analysis and pattern extraction tool designed to search through any type 
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                    Clawgrep                                      │
+│                    Glint ✨                                      │
 ├──────────────────────────────────────────────────────────────────┤
 │  main.py                  │ Entry point, orchestrates pipeline   │
 │                           │                                      │
 │  modules/                 │                                      │
 │  ├─ core/                 │                                      │
-│  │  ├─ pipeline.py        │ Main processing logic                │
-│  │  └─ parser.py          │ Event block extraction & matching    │
+│  │  ├─ parser.py          │ Event block extraction & matching    │
+│  │  ├─ pipeline.py        │ Main pipeline orchestration          │
+│  │  ├─ thread_executor.py │ Threading utilities                  │
+│  │  ├─ timestamp.py       │ Timestamp formatting                 │
+│  │  ├─ ui.py              │ Holds rich module                    │
+│  │  └─ utils.py           │                                      │
 │  │                        │                                      │
 │  ├─ io/                   │                                      │
 │  │  ├─ converters.py      │ Path/epoch conversions               │
 │  │  ├─ exporters.py       │ CSV & Excel output                   │
+│  │  ├─ config.py          │ Pattern config loading & validation  │
 │  │  └─ file_utils.py      │ File operations & validation         │
-│  │                        │                                      │
-│  ├─ config/               │                                      │
-│  │  └─ config.py          │ Pattern config loading & validation  │
-│  │                        │                                      │
-│  └─ utils/                │                                      │
-│     ├─ thread_executor.py │ Threading utilities                  │
-│     └─ utilities.py       │ Pattern loading & compilation        │
+│                           │                                      │
 ├──────────────────────────────────────────────────────────────────┤
 │  patterns/patterns.json   │ Regex patterns for different log     │
-│  logs/                    │   formats (SQL, DB pool, FTP, etc)   │
-│  output/                  │   Results                            │
+│  output/                  │   formats (SQL, DB pool, FTP, etc)   │
 └──────────────────────────────────────────────────────────────────┘
 ```
+
+### Design Philosophy
+
+The application follows a **modular, pipeline-based architecture** with clear separation of concerns:
+
+1. **Configuration Layer** (`modules/config/`)
+   - Centralized configuration management
+   - Environment-agnostic settings
+
+2. **Core Processing Layer** (`modules/core/`)
+   - Parsing logic
+   - Pipeline orchestration
+   - Thread management
+   - UI components
+   - Utility functions
+
+3. **I/O Layer** (`modules/io/`)
+   - File conversion utilities
+   - Export functionality
+   - File system operations
+
+### Pipeline Concept
+
+The `pipeline.py` module suggests a **processing pipeline** architecture where:
+- Data flows through multiple stages
+- Each stage can transform or filter data
+- Results can be aggregated or exported
+- Processing can be parallelized via `thread_executor.py`
+
+### Parser System
+
+The `parser.py` module indicates a **pattern-based parsing system** that:
+- Loads pattern definitions from `patterns.json`
+- Parses input data according to configured patterns
+- Can handle multiple pattern types
+- Likely uses regex or custom parsing logic
 
 ## Key Features
 
@@ -97,32 +131,36 @@ run_pipeline(
 ## Project Structure
 
 ```
-LobsterLogReporter/
-├── main.py                 # Entry point
-├── pyproject.toml          # Project configuration
-├── README.md               # This file
-├── thread.py               
-├── gui/                    # GUI module (if applicable)
-│   ├── main.py
-│   └── modules.py
-├── logs/                   # Input log files
-├── output/                 # Output results
+├── .git/                    # Version control
+├── .gitignore               # Git ignore rules
+├── .python-version          # Python version specification
+├── .vscode/                 # VS Code configuration
+├── logs/                    # Application logs
+├── main-cli.py             # CLI entry point
+├── main.py                 # Main application entry
+├── gui/                    # GUI application folder
+│   ├── main.py             # GUI main entry
+│   └── modules.py          # GUI modules
+├── modules/                # Core application modules
+│   ├── __init__.py        # Module initialization
+│   ├── config/            # Configuration management
+│   │   └── config.py      # Configuration handler
+│   ├── core/              # Core processing
+│   │   ├── parser.py      # Parser logic
+│   │   ├── pipeline.py    # Processing pipeline
+│   │   ├── thread_executor.py  # Thread management
+│   │   ├── timestamp.py   # Timestamp utilities
+│   │   ├── ui.py          # UI components
+│   │   └── utils.py       # Utility functions
+│   └── io/                # I/O handling
+│       ├── converters.py  # Format converters
+│       ├── exporters.py   # Export functionality
+│       └── file_utils.py  # File utilities
 ├── patterns/
-│   └── patterns.json       # Regex patterns configuration
-├── modules/
-│   ├── __init__.py
-│   ├── config/
-│   │   └── config.py
-│   ├── core/
-│   │   ├── parser.py
-│   │   └── pipeline.py
-│   ├── io/
-│   │   ├── converters.py
-│   │   ├── exporters.py
-│   │   └── file_utils.py
-│   └── utils/
-│       ├── thread_executor.py # Threading utilities
-│       └── utilities.py
+│   └── patterns.json       # Pattern definitions
+├── pyproject.toml          # Project configuration
+├── uv.lock                 # Dependency lock file
+└── README.md               # Documentation
 ```
 
 ## Configuration
