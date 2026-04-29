@@ -102,5 +102,5 @@ def run_pipeline(
     
     compiled, separator_regex = load_pattern_search_rule(patterns_config, pattern_key)
     
-    rprint("[bold]>>> Starting to search files and write matches to csv...[/bold]")
+    rprint("[bold]>>> Searching files for matches and writing results to csv...[/bold]")
     work(files, separator_regex, compiled, output_csv,event_keyword, show_progress)
