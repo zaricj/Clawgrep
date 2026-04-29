@@ -37,9 +37,7 @@ def compile_regex_patterns(category_config: dict):
     }
     return compiled
 
-
 # ========== Rows and headers Generator ==========
-
 
 def collect_rows(
     files: list, separator_regex, compiled, keyword: str, show_progress: bool
@@ -62,7 +60,7 @@ def collect_rows(
                 continue
 
             filepath: Path = file["Filepath"]
-            task_id = progress.add_task(f"Searching {filepath.name}...", total=file["Lines"]) if show_progress else None
+            task_id = progress.add_task(f"Searching [bold magenta]{filepath.name}[/bold magenta]...", total=file["Lines"]) if show_progress else None
             
             # CACHE these values once per file
             date_created = file["Created"].split("-")[0].strip()
