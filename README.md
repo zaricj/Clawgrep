@@ -1,28 +1,28 @@
-# 🐙 Lobster Log Reporter
+# Glint ✨
 
 A powerful file analysis and pattern extraction tool designed to search through log files, extract structured information using regex patterns, and generate comprehensive reports.
 
-## 🎯 What It Does
+## What It Does
 
 Lobster Log Reporter helps you:
 - **Search and parse** various types of log files (application logs, SQL, FTP, HTTP, etc.)
 - **Extract specific patterns** from log entries using regex-based definitions
 - **Structure and organize** unstructured log data into actionable reports
-- **Export results** to CSV/Excel for further analysis in spreadsheets
+- **Export results** to CSV for further analysis in spreadsheets
 - **Process multiple files** concurrently with parallel threading
 
-## ✨ Key Features
+## Key Features
 
 - **Pattern-Based Extraction**: Define regex patterns for different log formats
 - **Event Block Extraction**: Identify and extract complete event blocks from logs
 - **Multi-Pattern Support**: Match multiple patterns within a single event
 - **Threading & Performance**: Parallel file processing with `ThreadPoolExecutor`
-- **Progress Tracking**: Visual progress bars with `tqdm`
+- **Progress Tracking**: Visual progress bars with `rich` progress indicators
 - **Flexible Configuration**: JSON-based pattern definitions
-- **Multiple Export Formats**: CSV and Excel outputs
-- **TUI Interface**: Text-based User Interface powered by `textual`
+- **Multiple Export Formats**: CSV export functionality
+- **Console Interface**: Command-line interface for processing
 
-## 📦 Supported Log Formats
+## Supported Log Formats
 
 - SQL exceptions and errors
 - Database pool size exceeded events
@@ -31,133 +31,129 @@ Lobster Log Reporter helps you:
 - Catalina output (Jasperserver)
 - Custom patterns via JSON configuration
 
-## 🏗️ Architecture
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                Lobster Log Reporter                             │
-├─────────────────────────────────────────────────────────────────┤
+┌──────────────────────────────────────────────────────────────────┐
+│                    Lobster Log Reporter                          │
+├──────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  ┌───────────────┐                                              │
-│  │   TUI Layer   │   → Rich text-based interface                 │
-│  └───────────────┘                                              │
+│  ┌────────────────┐                                              │
+│  │  Core Modules  │  → Pipeline orchestration                    │
+│  │  ┌─────────┐   │                                              │
+│  │  │ parser  │   │  → Event extraction & pattern matching       │
+│  │  └─────────┘   │                                              │
+│  │  ┌─────────┐   │                                              │
+│  │  │pipeline │   │  → File processing                           │
+│  │  └─────────┘   │                                              │
+│  │  ┌─────────┐   │                                              │
+│  │  │thread   │   │  → Parallel processing                       │
+│  │  └─────────┘   │                                              │
+│  │  ┌─────────┐   │                                              │
+│  │  │timestamp│   │  → Time formatting                           │
+│  │  └─────────┘   │                                              │
+│  │  ┌─────────┐   │                                              │
+│  │  │utils    │   │  → Utility functions                         │
+│  │  └─────────┘   │                                              │
+│  └────────────────┘                                              │
 │                                                                  │
-│  ┌───────────────────────┐                                      │
-│  │   Core Processing     │  → Pipeline orchestration             │
-│  │   ┌───────────────┐   │                                      │
-│  │   │  parser.py    │  │  → Event extraction & pattern matching│
-│  │   │  pipeline.py  │  │                                      │
-│  │   │  thread_      │  │  → Parallel processing                │
-│  │   │  executor.py  │  │                                      │
-│  │   │  timestamp.py │  │  → Time formatting                    │
-│  │   │  ui.py        │  │  → TUI components                     │
-│  │   │  utils.py     │  │                                      │
-│  │   └───────────────┘  │                                      │
-│  └───────────────────────┘                                      │
+│  ┌────────────────┐                                              │
+│  │   I/O Modules  │  → File operations & exports                 │
+│  │  ┌─────────┐   │                                              │
+│  │  │config   │   │  → Configuration management                  │
+│  │  └─────────┘   │                                              │
+│  │  ┌──────────┐  │                                              │
+│  │  │converters│  │  → Format conversions                        │
+│  │  └──────────┘  │                                              │
+│  │  ┌─────────┐   │                                              │
+│  │  │exporters│   │  → CSV generation                            │
+│  │  └─────────┘   │                                              │
+│  │  ┌──────────┐  │                                              │
+│  │  │file_utils│  │  → File utilities                            │
+│  │  └──────────┘  │                                              │
+│  └────────────────┘                                              │
 │                                                                  │
-│  ┌───────────────────────┐                                      │
-│  │   I/O Layer           │  → File operations & exports          │
-│  │   ┌───────────────┐   │                                      │
-│  │   │  converters   │  │  → Path/epoch conversions              │
-│  │   │  exporters.py │  │  → CSV/Excel generation                │
-│  │   │  file_utils   │  │                                      │
-│  │   └───────────────┘  │                                      │
-│  └───────────────────────┘                                      │
+│  ┌────────────────┐                                              │
+│  │ Configuration  │  → Pattern definitions                       │
+│  │  ┌─────────┐   │                                              │
+│  │  │ patterns│   │                                              │
+│  │  └─────────┘   │                                              │
+│  └────────────────┘                                              │
 │                                                                  │
-│  ┌───────────────────────┐                                      │
-│  │   Configuration       │  → Pattern definitions                │
-│  │   ┌───────────────┐   │                                      │
-│  │   │  config.py    │  │  → JSON config loading                │
-│  │   └───────────────┘  │                                      │
-│  └───────────────────────┘                                      │
-│                                                                  │
-│  ┌───────────────────────┐                                      │
-│  │   Pattern Definitions │  → Regex patterns                     │
-│  └───────────────────────┘                                      │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-├── .git/                    # Version control
-├── .gitignore               # Git ignore rules
-├── .python-version          # Python version specification
-├── .vscode/                 # VS Code configuration
-├── logs/                    # Application logs
-├── src/                     # Source code
-│   ├── main.py             # Main application entry
-│   └── ...                 # Core modules
-├── gui/                     # GUI application (if applicable)
-│   ├── main.py             # GUI main entry
-│   └── modules.py          # GUI modules
-├── modules/                 # Core application modules
+├── .git/                      # Version control
+├── .gitignore                 # Git ignore rules
+├── .python-version            # Python version specification
+├── main.py                    # Main application entry point
+├── modules/                   # Core application modules
 │   ├── __init__.py
-│   ├── config/             # Configuration management
-│   │   └── config.py
-│   ├── core/               # Core processing
-│   │   ├── parser.py       # Pattern parsing
-│   │   ├── pipeline.py     # Pipeline orchestration
-│   │   ├── thread_executor.py # Parallel processing
-│   │   ├── timestamp.py    # Time formatting
-│   │   ├── ui.py          # TUI components
-│   │   └── utils.py       # Utility functions
-│   └── io/                 # I/O handling
-│       ├── converters.py  # Format conversions
-│       ├── exporters.py   # CSV/Excel export
-│       └── file_utils.py  # File utilities
+│   ├── core/                  # Core processing modules
+│   │   ├── parser.py          # Pattern parsing and extraction
+│   │   ├── pipeline.py        # Pipeline orchestration
+│   │   ├── thread_executor.py # Parallel processing management
+│   │   ├── timestamp.py       # Time formatting utilities
+│   │   ├── ui.py             # Console UI components
+│   │   └── utils.py          # Utility functions
+│   └── io/                    # I/O handling modules
+│       ├── config.py         # Configuration management
+│       ├── converters.py     # Format conversions
+│       ├── exporters.py      # CSV export functionality
+│       └── file_utils.py     # File utilities
 ├── patterns/
-│   └── patterns.json       # Pattern definitions
-├── output/                 # Generated reports
-├── pyproject.toml          # Project configuration
-├── uv.lock                 # Dependency lock file
-└── README.md               # Documentation
+│   └── patterns.json         # Pattern definitions
+├── pyproject.toml            # Project configuration and dependencies
+├── uv.lock                   # Dependency lock file
+└── README.md                 # Documentation
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
 1. **Prerequisites**: Python 3.13+
 2. **Create virtual environment**:
-   ```bash
-   python -m venv .venv
-   ```
+  ```bash
+  python -m venv .venv
+  ```
 3. **Activate environment**:
-   ```bash
-   # Windows
-   .venv\Scripts\Activate.ps1
-   
-   # Linux/Mac
-   source .venv/bin/activate
-   ```
+  ```bash
+  # Windows
+  .venv\Scripts\Activate.ps1
+  
+  # Linux/Mac
+  source .venv/bin/activate
+  ```
 4. **Install dependencies**:
-   ```bash
-   pip install -e .
-   ```
+  ```bash
+  pip install -e .
+  ```
 
 ### Running the Tool
 
 ```bash
-# Start from project root
-python -m lobsterlogreporter
+# Run from project root
+python main.py
 ```
 
-## 📖 Usage Examples
+## Usage Examples
 
 ### Basic Pattern Matching
 
 ```python
-from lobsterlogreporter import run_pipeline
+from modules.core.pipeline import run_pipeline
 
 result = run_pipeline(
     patterns_config="patterns/patterns.json",
-    pattern_key="sql_exceptions",
+    pattern_key="http_requests_jasperserver",
     files_directory="logs/",
     file_pattern="*.log",
     output_csv="output/results.csv",
-    event_keyword="ERROR",
+    event_keyword="",
     show_progress=True
 )
 ```
@@ -165,15 +161,15 @@ result = run_pipeline(
 ### Processing Multiple Files
 
 ```bash
-python src/main.py \
+python main.py \
   --patterns patterns/patterns.json \
-  --pattern sql_exceptions \
+  --pattern http_requests_jasperserver \
   --files logs/*.log \
   --output output/report.csv \
   --progress
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Pattern Definitions
 
@@ -181,14 +177,15 @@ Edit `patterns/patterns.json` to define your extraction patterns:
 
 ```json
 {
-  "sql_exceptions": {
+  "http_requests_jasperserver": {
     "base": {
       "separator": "^(?P<time>\\d{2}:\\d{2}:\\d{2})"
     },
     "patterns": {
-      "sql_exception": "(?s)exception on sql statement:.*?"
+      "http_request": ".*"
     }
   },
+  "sql_exceptions": { ... },
   "db_pool_size_exceeded": { ... },
   "ftp_per_profile": { ... }
 }
@@ -205,7 +202,7 @@ Edit `patterns/patterns.json` to define your extraction patterns:
 | `catalina_out_jasperserver` | Extract Catalina output logs |
 | *(custom)* | Define your own patterns |
 
-## 📊 Output Formats
+## Output Formats
 
 ### CSV Export
 
@@ -216,33 +213,42 @@ Results are exported to CSV files with columns:
 - File source
 - Additional fields
 
-### Excel Export
-
-Generate formatted Excel reports with:
-- Multiple sheets for different patterns
-- Conditional formatting
-- Data validation
-- Professional styling
-
-## 🛠️ Development
+## Development
 
 ### Dependencies
 
 - `pandas` >= 3.0.2 - Data manipulation
-- `rich` >= 15.0.0 - Console formatting
-- `textual` >= 8.2.4 - TUI interface
-- `textual-dev` >= 1.8.0 - TUI development tools
-- `xlsxwriter` >= 3.2.9 - Excel generation
-- `tqdm` - Progress bars (if used)
+- `rich` >= 15.0.0 - Console formatting and progress bars
+- `xlsxwriter` >= 3.2.9 - Excel generation (optional)
 
 ### Adding New Patterns
 
 1. Edit `patterns/patterns.json`
 2. Add a new pattern key
-3. Define your regex patterns
+3. Define your regex patterns with multiple capture groups
 4. Test in `main.py`
 
-## 🐛 Contributing
+### JSON Configuration Structure
+
+Every pattern key in `patterns.json` must contain a regex with multiple groups that will be used to search in an event block in a log file. This ensures that a single line contains all the matches from the same event block.
+
+**Expected JSON structure**:
+```json
+{
+    "category_name": {
+        "base": {
+            "separator": "regex_string"
+        },
+        "patterns": {
+            "pattern_name": "regex_string",
+            ...
+        }
+    },
+    ...
+}
+```
+
+## Contributing
 
 To contribute:
 1. Fork the repository
@@ -250,14 +256,14 @@ To contribute:
 3. Add tests for new features
 4. Submit a pull request
 
-## 📄 License
+## License
 
 MIT License - Feel free to use and modify!
 
-## 👤 Author
+## Author
 
 Jovan
 
 ---
 
-**Need help?** Check the source code in `src/main.py` or create an issue on the repository.
+**Need help?** Check the source code in `main.py` or create an issue on the repository.
