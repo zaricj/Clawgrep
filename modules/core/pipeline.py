@@ -4,7 +4,7 @@ import itertools
 from rich.panel import Panel
 
 
-from modules.config.config import load_pattern_search_rule
+from modules.io.config import load_pattern_search_rule
 from modules.core.utils import collect_rows
 from modules.core.ui import CONSOLE, rprint
 from modules.io.file_utils import get_files_in_folder

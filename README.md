@@ -1,4 +1,4 @@
-# Clawgrep 🦞
+# Glint ✨
 
 A file analysis and pattern extraction tool designed to search through any type of text files, ideally something like log files with repeating patterns and extract specific information using regex patterns.
 
@@ -13,26 +13,25 @@ A file analysis and pattern extraction tool designed to search through any type 
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                    Clawgrep                                      │
+│                    Glint ✨                                      │
 ├──────────────────────────────────────────────────────────────────┤
 │  main.py                  │ Entry point, orchestrates pipeline   │
 │                           │                                      │
 │  modules/                 │                                      │
 │  ├─ core/                 │                                      │
-│  │  ├─ pipeline.py        │ Main processing logic                │
-│  │  └─ parser.py          │ Event block extraction & matching    │
+│  │  ├─ parser.py          │ Event block extraction & matching    │
+│  │  ├─ pipeline.py        │ Main pipeline orchestration          │
+│  │  ├─ thread_executor.py │ Threading utilities                  │
+│  │  ├─ timestamp.py       │ Timestamp formatting                 │
+│  │  ├─ ui.py              │ Holds rich module                    │
+│  │  └─ utils.py           │                                      │
 │  │                        │                                      │
 │  ├─ io/                   │                                      │
 │  │  ├─ converters.py      │ Path/epoch conversions               │
 │  │  ├─ exporters.py       │ CSV & Excel output                   │
+│  │  ├─ config.py          │ Pattern config loading & validation  │
 │  │  └─ file_utils.py      │ File operations & validation         │
-│  │                        │                                      │
-│  ├─ config/               │                                      │
-│  │  └─ config.py          │ Pattern config loading & validation  │
-│  │                        │                                      │
-│  └─ utils/                │                                      │
-│     ├─ thread_executor.py │ Threading utilities                  │
-│     └─ utilities.py       │ Pattern loading & compilation        │
+│                           │                                      │
 ├──────────────────────────────────────────────────────────────────┤
 │  patterns/patterns.json   │ Regex patterns for different log     │
 │  output/                  │   formats (SQL, DB pool, FTP, etc)   │
