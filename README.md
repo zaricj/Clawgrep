@@ -4,7 +4,7 @@ A powerful file analysis and pattern extraction tool designed to search through 
 
 ## What It Does
 
-Lobster Log Reporter helps you:
+Glint helps you:
 - **Search and parse** various types of log files (application logs, SQL, FTP, HTTP, etc.)
 - **Extract specific patterns** from log entries using regex-based definitions
 - **Structure and organize** unstructured log data into actionable reports
@@ -35,7 +35,7 @@ Lobster Log Reporter helps you:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                    Lobster Log Reporter                          │
+│                    Glint                                         │
 ├──────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  ┌────────────────┐                                              │
